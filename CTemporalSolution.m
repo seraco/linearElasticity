@@ -3,7 +3,6 @@ classdef CTemporalSolution < CBaseSolution
     %   Brief: Main class used to calculate the temporal solution
     %   Author: S.Ramon
     %   Version: 0.0.1
-    %   Todo: Set totalEnergy as dependent property
     
     methods
         function object = CTemporalSolution( Mesh, InitialData, LEMatrices, StaticSolution )
@@ -19,6 +18,7 @@ classdef CTemporalSolution < CBaseSolution
                 N = InitialData.N;
                 object.t = InitialData.t;
                 t = InitialData.t;
+                integratorType = InitialData.Integrator;
                 M = LEMatrices.M;
                 K = LEMatrices.K;
                 Xo(D) = StaticSolution.u(D);
@@ -31,10 +31,23 @@ classdef CTemporalSolution < CBaseSolution
 
                 object.potentialEnergy = zeros(1, size(t,2));
                 object.kineticEnergy = zeros(1, size(t,2));
+                
+                switch integratorType
+                    case 'forwardEuler'
+                        Integrator = CForwardEIntegrator;
+                    case 'backwardEuler'
+                        Integrator = CBackwardEIntegrator;
+                    case 'midPointImplicit'
+                        Integrator = CMidPImplicitIntegrator;
+                    case 'alphaMethod'
+                        Integrator = CAlphaMethodIntegrator;
+                    case 'beemansAlgorithm'
+                        Integrator = CBeemansAIntegrator;
+                end
 
                 for i = 1:size(t,2)
 
-                    Yn1 = object.beemansAlgorithm( t, Ynm1, Yn, M(N,N), K(N,N), h );
+                    Yn1 = Integrator.step( t(i), Ynm1, Yn, M(N,N), K(N,N), h, 0.5 );
 
                     xt(N) = Yn1(1:size(Yn1,1)/2);
                     xt(D) = Xo(D);

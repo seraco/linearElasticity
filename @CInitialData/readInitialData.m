@@ -1,8 +1,17 @@
 function [ ro, E, area, alpha, iTime, nSteps, fTime, Fext, fixnodes, StaticPost, ModalPost,...
-    TemporalPost, OneModePost, ModePost ] = readInitialData( filename )
+    TemporalPost, OneModePost, ModePost, Integrator ] = readInitialData( filename )
 
-A = importdata(filename);
-n = length(A.textdata(:,1));
+% A = importdata(filename);
+% n = length(A.textdata(:,1));
+fid = fopen(filename);
+scan = textscan(fid, '%s %s %s');
+fclose(fid);
+
+firstColumn = scan(1);
+secondColumn = scan(2);
+thirdColumn = scan(3);
+
+n = size(firstColumn{1},1);
 
 readFext = false;
 readFixnodes = false;
@@ -10,58 +19,64 @@ j=0;
 k=0;
 
 for i=1:n
-    if strcmp(A.textdata(i,1),'Density')
-        ro = A.data(i,1);
+    if strcmp(firstColumn{1}{i},'Integrator')
+        Integrator = thirdColumn{1}{i};
     end
-    if strcmp(A.textdata(i,1),'Young')
-        E = A.data(i,1);
+    if strcmp(firstColumn{1}{i},'Density')
+        ro = str2double(thirdColumn{1}{i});
     end
-    if strcmp(A.textdata(i,1),'Area')
-        area = A.data(i,1);
+    if strcmp(firstColumn{1}{i},'Young')
+        E = str2double(thirdColumn{1}{i});
     end
-    if strcmp(A.textdata(i,1),'Alpha')
-        alpha = A.data(i,1);
+    if strcmp(firstColumn{1}{i},'Area')
+        area = str2double(thirdColumn{1}{i});
     end
-    if strcmp(A.textdata(i,1),'Time')
-        iTime = str2double(A.textdata(i+1,1));
-        fTime = str2double(A.textdata(i+1,2));
-        nSteps = A.data(i+1,1);
+    if strcmp(firstColumn{1}{i},'Alpha')
+        alpha = str2double(thirdColumn{1}{i});
     end
-    if strcmp(A.textdata(i,1),'Fext')
+    if strcmp(firstColumn{1}{i},'Time')
+        iTime = str2double(firstColumn{1}{i+1});
+        fTime = str2double(secondColumn{1}{i+1});
+        nSteps = str2double(thirdColumn{1}{i+1});
+    end
+    if strcmp(firstColumn{1}{i},'Fext')
         readFext = true;
     end
-    if strcmp(A.textdata(i,1),'End') && readFext
+    if strcmp(firstColumn{1}{i},'End') && readFext
         readFext = false;
     end
-    if strcmp(A.textdata(i,1),'Fixnodes')
+    if strcmp(firstColumn{1}{i},'Fixnodes')
         readFixnodes = true;
     end
-    if strcmp(A.textdata(i,1),'End') && readFixnodes
+    if strcmp(firstColumn{1}{i},'End') && readFixnodes
         readFixnodes = false;
     end
-    if strcmp(A.textdata(i,1),'StaticPost')
-        StaticPost = A.data(i,1);
+    if strcmp(firstColumn{1}{i},'StaticPost')
+        StaticPost = str2double(thirdColumn{1}{i});
     end
-    if strcmp(A.textdata(i,1),'ModalPost')
-        ModalPost = A.data(i,1);
+    if strcmp(firstColumn{1}{i},'ModalPost')
+        ModalPost = str2double(thirdColumn{1}{i});
     end
-    if strcmp(A.textdata(i,1),'TemporalPost')
-        TemporalPost = A.data(i,1);
+    if strcmp(firstColumn{1}{i},'TemporalPost')
+        TemporalPost = str2double(thirdColumn{1}{i});
     end
-    if strcmp(A.textdata(i,1),'OneModePost')
-        OneModePost = str2double(A.textdata(i+1,1));
-        ModePost = str2double(A.textdata(i+1,2));
+    if strcmp(firstColumn{1}{i},'OneModePost')
+        OneModePost = str2double(thirdColumn{1}{i});
     end
-    
-    if readFext && strcmp(A.textdata(i,1),'Fext') == false
+    if strcmp(firstColumn{1}{i},'Mode')
+        ModePost = str2double(thirdColumn{1}{i});
+    end
+    if readFext && strcmp(firstColumn{1}{i},'Fext') == false
         j=j+1;
-        Fext(j,1:2) = str2double(A.textdata(i,1:2));
-        Fext(j,3) = A.data(i,1);
+        Fext(j,1) = str2double(firstColumn{1}{i});
+        Fext(j,2) = str2double(secondColumn{1}{i});
+        Fext(j,3) = str2double(thirdColumn{1}{i});
     end
-    if readFixnodes && strcmp(A.textdata(i,1),'Fixnodes') == false
+    if readFixnodes && strcmp(firstColumn{1}{i},'Fixnodes') == false
         k=k+1;
-        fixnodes(k,1:2) = str2double(A.textdata(i,1:2));
-        fixnodes(k,3) = A.data(i,1);      
+        fixnodes(k,1) = str2double(firstColumn{1}{i});
+        fixnodes(k,2) = str2double(secondColumn{1}{i});
+        fixnodes(k,3) = str2double(thirdColumn{1}{i});     
     end
 end
 
