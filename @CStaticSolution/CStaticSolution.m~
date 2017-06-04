@@ -10,15 +10,8 @@ classdef CStaticSolution
     end
     
     methods
-        function object = CStaticSolution( Mesh, InitialData, K )
+        function object = CStaticSolution( InitialData, K )
             if nargin > 0
-                xpoints = Mesh.xpoints;
-                T = Mesh.T;
-                nnodepelem = Mesh.nnodepelem;
-                nelem = Mesh.nelem;
-                nnode = Mesh.nnode;
-                ndofpn = Mesh.ndofpn;
-                postProcessing = InitialData.StaticPost;
                 D = InitialData.D;
                 N = InitialData.N;
                 uD = InitialData.uD;
@@ -38,14 +31,9 @@ classdef CStaticSolution
                 object.f(N) = fN;
                 object.f(D) = fD;
                 
-                if postProcessing
-                    
-                    PostProcessing = CPostProcessing('data/Static',1);
-                
-                    PostProcessing.toGID ( xpoints(:,1:3), T, nnodepelem, nelem, nnode );
-                    PostProcessing.toGIDPost( nnodepelem, ndofpn, 1, object.u );
-                
-                end
+                ToGID ( 'data/problema7_post', 1, xpoints(:,1:3), T, nnodepelem, nelem, nnode );
+
+    ToGiD_post( 'data/problema7_post', 1, nnodepelem, ndofpn, 1, u );
             end
         end
     end

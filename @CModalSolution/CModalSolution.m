@@ -1,4 +1,4 @@
-classdef CModalSolution
+classdef CModalSolution < CBaseSolution
     %CMesh
     %   Brief: Main class used to calculate the modal solution
     %   Author: S.Ramon
@@ -7,15 +7,18 @@ classdef CModalSolution
     properties
         X
         w
-        potentialEnergy
-        kineticEnergy
-        totalEnergy
-        t
     end
     
     methods
-        function object = CModalSolution( InitialData, LEMatrices, StaticSolution )
+        function object = CModalSolution( Mesh, InitialData, LEMatrices, StaticSolution )
             if nargin > 0
+                xpoints = Mesh.xpoints;
+                T = Mesh.T;
+                nnodepelem = Mesh.nnodepelem;
+                nelem = Mesh.nelem;
+                nnode = Mesh.nnode;
+                ndofpn = Mesh.ndofpn;
+                postProcessing = InitialData.ModalPost;
                 D = InitialData.D;
                 N = InitialData.N;
                 uD = InitialData.uD;
@@ -47,7 +50,6 @@ classdef CModalSolution
 
                 object.potentialEnergy = zeros(1, size(t,2));
                 object.kineticEnergy = zeros(1, size(t,2));
-                object.totalEnergy = zeros(1, size(t,2));
 
                 for i = 1:size(t,2)
 
@@ -63,28 +65,22 @@ classdef CModalSolution
 
                     xt(D) = Xo(D) ;
                     vt(D) = Vo(D) ;
+                    
+                    if postProcessing
 
-%                     filename = 'data/problema7' ;
+                        PostProcessing = CPostProcessing('data/Modal',t(i)) ;
 
-%                     ToGID ( filename, t(i), xpoints(:,1:3), T, nnodepelem, nelem, nnode );
-%                     ToGiD_post( filename, t(i), nnodepelem, ndofpn, 1, xt' );
+                        PostProcessing.toGID ( xpoints(:,1:3), T, nnodepelem, nelem, nnode );
+                        PostProcessing.toGIDPost( nnodepelem, ndofpn, 1, xt' );
+                    
+                    end
 
                     object.potentialEnergy(i) = 0.5*xt'*K*xt;
                     object.kineticEnergy(i) = 0.5*vt'*M*vt;
-                    object.totalEnergy(i) = object.potentialEnergy(i) + object.kineticEnergy(i);
 
                 end
 
             end
-        end
-        function plotEnergy( object )
-            figure
-            o = object;
-            plot(o.t,o.potentialEnergy,o.t,o.kineticEnergy,o.t,o.totalEnergy);
-            title('Total Energy')
-            xlabel('t[s]')
-            ylabel('Energy[W]')
-            legend('Potential','Kinetic','Total')
         end
     end
     

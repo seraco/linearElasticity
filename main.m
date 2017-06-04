@@ -6,10 +6,10 @@ InitialData = CInitialData( 'initialData.txt', Mesh.nnode, Mesh.ndofpn );
 
 LEMatrices = CLinearElasticityMatrices( Mesh, InitialData );
 
-StaticSolution = CStaticSolution( InitialData, LEMatrices.K );
+StaticSolution = CStaticSolution( Mesh, InitialData, LEMatrices.K );
 
-ModalSolution = CModalSolution( InitialData, LEMatrices, StaticSolution );
+ModalSolution = CModalSolution( Mesh, InitialData, LEMatrices, StaticSolution );
 
-TemporalSolution = CTemporalSolution( InitialData, LEMatrices, StaticSolution );
+TemporalSolution = CTemporalSolution( Mesh, InitialData, LEMatrices, StaticSolution );
 
-OneModeSolution = COneModeSolution( 1, InitialData.t, LEMatrices, ModalSolution );
+OneModeSolution = COneModeSolution( Mesh, InitialData, LEMatrices, ModalSolution );

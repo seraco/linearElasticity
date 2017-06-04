@@ -1,4 +1,5 @@
-function [ ro, E, area, alpha, iTime, nSteps, fTime, Fext, fixnodes  ] = readInitialData( filename )
+function [ ro, E, area, alpha, iTime, nSteps, fTime, Fext, fixnodes, StaticPost, ModalPost,...
+    TemporalPost, OneModePost, ModePost ] = readInitialData( filename )
 
 A = importdata(filename);
 n = length(A.textdata(:,1));
@@ -37,6 +38,19 @@ for i=1:n
     end
     if strcmp(A.textdata(i,1),'End') && readFixnodes
         readFixnodes = false;
+    end
+    if strcmp(A.textdata(i,1),'StaticPost')
+        StaticPost = A.data(i,1);
+    end
+    if strcmp(A.textdata(i,1),'ModalPost')
+        ModalPost = A.data(i,1);
+    end
+    if strcmp(A.textdata(i,1),'TemporalPost')
+        TemporalPost = A.data(i,1);
+    end
+    if strcmp(A.textdata(i,1),'OneModePost')
+        OneModePost = str2double(A.textdata(i+1,1));
+        ModePost = str2double(A.textdata(i+1,2));
     end
     
     if readFext && strcmp(A.textdata(i,1),'Fext') == false

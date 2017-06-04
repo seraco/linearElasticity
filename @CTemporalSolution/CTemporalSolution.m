@@ -1,20 +1,20 @@
-classdef CTemporalSolution
+classdef CTemporalSolution < CBaseSolution
     %CMesh
     %   Brief: Main class used to calculate the temporal solution
     %   Author: S.Ramon
     %   Version: 0.0.1
     %   Todo: Set totalEnergy as dependent property
     
-    properties
-        potentialEnergy
-        kineticEnergy
-        totalEnergy
-        t
-    end
-    
     methods
-        function object = CTemporalSolution( InitialData, LEMatrices, StaticSolution )
+        function object = CTemporalSolution( Mesh, InitialData, LEMatrices, StaticSolution )
             if nargin > 0
+                xpoints = Mesh.xpoints;
+                T = Mesh.T;
+                nnodepelem = Mesh.nnodepelem;
+                nelem = Mesh.nelem;
+                nnode = Mesh.nnode;
+                ndofpn = Mesh.ndofpn;
+                postProcessing = InitialData.TemporalPost;
                 D = InitialData.D;
                 N = InitialData.N;
                 object.t = InitialData.t;
@@ -31,7 +31,6 @@ classdef CTemporalSolution
 
                 object.potentialEnergy = zeros(1, size(t,2));
                 object.kineticEnergy = zeros(1, size(t,2));
-                object.totalEnergy = zeros(1, size(t,2));
 
                 for i = 1:size(t,2)
 
@@ -44,27 +43,21 @@ classdef CTemporalSolution
 
                     object.potentialEnergy(i) = 0.5*xt*K*xt';
                     object.kineticEnergy(i) = 0.5*vt*M*vt';
-                    object.totalEnergy(i) = object.potentialEnergy(i) + object.kineticEnergy(i);
+                    
+                    if postProcessing
 
-            %         filename = 'data/problema7_FE';
-            % 
-            %         ToGID ( filename, t(i), xpoints(:,1:3), T, nnodepelem, nelem, nnode );
-            %         ToGiD_post( filename, t(i), nnodepelem, ndofpn, 1, xt' );
+                        PostProcessing = CPostProcessing('data/Temporal',t(i));
+
+                        PostProcessing.toGID ( xpoints(:,1:3), T, nnodepelem, nelem, nnode );
+                        PostProcessing.toGIDPost( nnodepelem, ndofpn, 1, xt' );
+            
+                    end
 
                     Ynm1 = Yn;
                     Yn = Yn1;
 
                 end
             end
-        end
-        function plotEnergy( object )
-            figure
-            o = object;
-            plot(o.t,o.potentialEnergy,o.t,o.kineticEnergy,o.t,o.totalEnergy);
-            title('Total Energy')
-            xlabel('t[s]')
-            ylabel('Energy[W]')
-            legend('Potential','Kinetic','Total')
         end
     end
     methods (Static)
