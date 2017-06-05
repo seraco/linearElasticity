@@ -5,9 +5,9 @@ classdef CLEIntegrator
     %   Version: 0.0.1
     
     methods (Static)
-        function f = f( t, Y, M, K )
+        function f = f( t, Y, M, K, fN, w )
 
-            F = CInitialData.force(t,Y(1:size(M,1))) ;
+            F = CInitialData.force(t, fN, w);
 
             A = [ zeros(size(M,1)) eye(size(M,1)) ; -M\K zeros(size(M,1)) ] ;
             B = [ zeros(size(M,1),1) ; M\F ] ;
@@ -15,9 +15,9 @@ classdef CLEIntegrator
             f = A * Y + B ;
 
         end
-        function a = a( t, x, M, K )
+        function a = a( t, x, M, K, fN, w )
 
-            F = CInitialData.force(t,x);
+            F = CInitialData.force(t, fN, w);
 
             a = M\(F - K*x);
 

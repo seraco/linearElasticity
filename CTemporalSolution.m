@@ -19,11 +19,13 @@ classdef CTemporalSolution < CBaseSolution
                 object.t = InitialData.t;
                 t = InitialData.t;
                 integratorType = InitialData.Integrator;
+                w = InitialData.w;
                 M = LEMatrices.M;
                 K = LEMatrices.K;
                 Xo(D) = StaticSolution.u(D);
                 Xo(N) = StaticSolution.u(N);
                 Vo =  zeros(size(M,1),1);
+                fN = StaticSolution.f(N);
                 
                 Ynm1 = [ Xo(N)'; Vo(N) ];
                 Yn = [ Xo(N)'; Vo(N) ];
@@ -47,7 +49,7 @@ classdef CTemporalSolution < CBaseSolution
 
                 for i = 1:size(t,2)
 
-                    Yn1 = Integrator.step( t(i), Ynm1, Yn, M(N,N), K(N,N), h, 0.5 );
+                    Yn1 = Integrator.step( t(i), Ynm1, Yn, M(N,N), K(N,N), h, 0.5, fN, w );
 
                     xt(N) = Yn1(1:size(Yn1,1)/2);
                     xt(D) = Xo(D);

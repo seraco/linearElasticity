@@ -1,6 +1,6 @@
-function F = force( t, x )
+function F = force( t, fN, w )
 
-F = zeros(size(x,1),1);
+F = fN'*cos(w*t);
 
 end
 

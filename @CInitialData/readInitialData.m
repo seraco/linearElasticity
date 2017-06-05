@@ -1,5 +1,5 @@
 function [ ro, E, area, alpha, iTime, nSteps, fTime, Fext, fixnodes, StaticPost, ModalPost,...
-    TemporalPost, OneModePost, ModePost, Integrator ] = readInitialData( filename )
+    TemporalPost, OneModePost, ModePost, Integrator, w ] = readInitialData( filename )
 
 % A = importdata(filename);
 % n = length(A.textdata(:,1));
@@ -41,6 +41,7 @@ for i=1:n
     end
     if strcmp(firstColumn{1}{i},'Fext')
         readFext = true;
+        w = str2double(thirdColumn{1}{i});
     end
     if strcmp(firstColumn{1}{i},'End') && readFext
         readFext = false;

@@ -20,6 +20,7 @@ classdef CInitialData
         OneModePost
         ModePost
         Integrator
+        w
         filename
     end
         
@@ -43,7 +44,8 @@ classdef CInitialData
                   object.TemporalPost,...
                   object.OneModePost,...
                   object.ModePost,...
-                  object.Integrator...
+                  object.Integrator,...
+                  object.w...
                 ] = object.readInitialData( filename );
             
                 object.t = linspace(iTime, fTime, nSteps);
@@ -95,8 +97,8 @@ classdef CInitialData
     end
     methods (Static)
         [ ro, E, area, alpha, iTime, nSteps, fTime, Fext, fixnodes, StaticPost, ModalPost,...
-            TemporalPost, OneModePost, ModePost, Integrator  ] = readInitialData( filename );
-        F = force( t, x );
+            TemporalPost, OneModePost, ModePost, Integrator, w  ] = readInitialData( filename );
+        F = force( t, fN, w );
     end
     
 end
