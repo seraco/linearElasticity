@@ -5,7 +5,7 @@ classdef CTemporalSolution < CBaseSolution
     %   Version: 0.0.1
     
     methods
-        function object = CTemporalSolution( Mesh, InitialData, LEMatrices, StaticSolution )
+        function object = CTemporalSolution( Mesh, InitialData, LEProblem, StaticSolution )
             if nargin > 0
                 xpoints = Mesh.xpoints;
                 T = Mesh.T;
@@ -20,12 +20,12 @@ classdef CTemporalSolution < CBaseSolution
                 t = InitialData.t;
                 integratorType = InitialData.Integrator;
                 w = InitialData.w;
-                M = LEMatrices.M;
-                K = LEMatrices.K;
+                M = LEProblem.M;
+                K = LEProblem.K;
                 Xo(D) = StaticSolution.u(D);
                 Xo(N) = StaticSolution.u(N);
                 Vo =  zeros(size(M,1),1);
-                fN = StaticSolution.f(N);
+                f = StaticSolution.f;
                 
                 Ynm1 = [ Xo(N)'; Vo(N) ];
                 Yn = [ Xo(N)'; Vo(N) ];
@@ -49,7 +49,7 @@ classdef CTemporalSolution < CBaseSolution
 
                 for i = 1:size(t,2)
 
-                    Yn1 = Integrator.step( t(i), Ynm1, Yn, M(N,N), K(N,N), h, 0.5, fN, w );
+                    Yn1 = Integrator.step( t(i), Ynm1, Yn, h, 0.5, f, w, LEProblem, N );
 
                     xt(N) = Yn1(1:size(Yn1,1)/2);
                     xt(D) = Xo(D);

@@ -1,4 +1,4 @@
-classdef CLinearElasticityMatrices
+classdef CLinearElasticityProblem
     %CLinearElasticityMatrices
     %   Brief: Main class used to calculate the matrices for the linear elastic problem
     %   Author: S.Ramon
@@ -10,7 +10,7 @@ classdef CLinearElasticityMatrices
     end
     
     methods
-        function object = CLinearElasticityMatrices( mesh, iData )
+        function object = CLinearElasticityProblem( mesh, iData )
             if nargin > 0
                 
                 xpoints = mesh.xpoints;
@@ -64,6 +64,24 @@ classdef CLinearElasticityMatrices
                     end
                 end
             end
+        end
+        function f = f( object, t, Y, f, w, N )
+
+            F = CInitialData.force(t, f, w);
+
+            A = [ zeros(size(object.M(N,N),1)) eye(size(object.M(N,N),1)) ;
+                   -object.M(N,N)\object.K(N,N) zeros(size(object.M(N,N),1)) ] ;
+            B = [ zeros(size(object.M(N,N),1),1) ; object.M(N,N)\F(N) ] ;
+
+            f = A * Y + B ;
+
+        end
+        function a = a( object, t, x, f, w, N )
+
+            F = CInitialData.force(t, f, w);
+
+            a = object.M(N,N)\(F(N) - object.K(N,N)*x);
+
         end
     end
     methods (Static)

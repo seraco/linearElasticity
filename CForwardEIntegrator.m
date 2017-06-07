@@ -4,10 +4,10 @@ classdef CForwardEIntegrator < CLEIntegrator
     %   Author: S.Ramon
     %   Version: 0.0.1
     
-    methods
-        function Yn1 = step( object, tn, ~, Yn, M, K, h, ~, fN, w )
+    methods (Static)
+        function Yn1 = step( tn, ~, Yn, h, ~, f, w, LEProblem, N )
             
-            fn = object.f(tn, Yn, M, K, fN, w ) ;
+            fn = LEProblem.f(tn, Yn, f, w, N ) ;
 
             Yn1 = Yn + h * fn ;
 

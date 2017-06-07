@@ -4,13 +4,13 @@ classdef CAlphaMethodIntegrator < CLEIntegrator
     %   Author: S.Ramon
     %   Version: 0.0.1
     
-    methods
-        function Yn1 = step( object, tn, ~, Yn, M, K, h, alpha, fN, w )
+    methods (Static)
+        function Yn1 = step( tn, ~, Yn, h, alpha, f, w, LEProblem, N )
             
             options = optimoptions('fsolve','Display','none') ;
 
-            Yn1 = fsolve(@(Yn1) Yn1 - Yn - h * ((1-alpha)*object.f(tn,Yn,M,K,fN,w)...
-                + alpha*object.f(tn+h,Yn1,M,K,fN,w)), Yn, options);
+            Yn1 = fsolve(@(Yn1) Yn1 - Yn - h * ((1-alpha)*LEProblem.f(tn,Yn,f,w,N)...
+                + alpha*LEProblem.f(tn+h,Yn1,f,w,N)), Yn, options);
 
         end
     end
