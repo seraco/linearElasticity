@@ -1,4 +1,4 @@
-classdef CBeemansAIntegrator < CLEIntegrator
+classdef CBeemansAIntegrator
     %CMesh
     %   Brief: Beeman's Algorithm integrator
     %   Author: S.Ramon

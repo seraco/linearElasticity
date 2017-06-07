@@ -1,4 +1,4 @@
-classdef CBackwardEIntegrator < CLEIntegrator
+classdef CBackwardEIntegrator
     %CMesh
     %   Brief: Backward Euler integrator
     %   Author: S.Ramon

@@ -1,4 +1,4 @@
-classdef CAlphaMethodIntegrator < CLEIntegrator
+classdef CAlphaMethodIntegrator
     %CMesh
     %   Brief: Alpha Method integrator
     %   Author: S.Ramon

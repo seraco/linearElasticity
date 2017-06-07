@@ -75,16 +75,6 @@ classdef CTemporalSolution < CBaseSolution
             end
         end
     end
-    methods (Static)
-        Yn1 = forwardEuler( tn, Yn, M, K, h )
-        Yn1 = backwardEuler( tn, Yn, M, K, h )
-        Yn1 = alphaMethod( tn, Yn, M, K, h, alpha )
-        Yn1 = midPointImplicit( tn, Yn, M, K, h )
-        Yn1 = beemansAlgorithm( tn, Ynm1, Yn, M, K, h )
-        f = f( t, Y, M, K )
-        a = a( t, x, M, K )
-        F = force( t, x )
-    end
     
 end
 

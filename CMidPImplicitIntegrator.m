@@ -1,4 +1,4 @@
-classdef CMidPImplicitIntegrator < CLEIntegrator
+classdef CMidPImplicitIntegrator
     %CMesh
     %   Brief: Mid Point Implicit integrator
     %   Author: S.Ramon

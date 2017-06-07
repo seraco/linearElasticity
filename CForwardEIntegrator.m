@@ -1,4 +1,4 @@
-classdef CForwardEIntegrator < CLEIntegrator
+classdef CForwardEIntegrator
     %CMesh
     %   Brief: Forward Euler integrator
     %   Author: S.Ramon
