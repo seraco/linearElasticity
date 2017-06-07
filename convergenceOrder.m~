@@ -1,0 +1,21 @@
+clear
+
+Mesh = CMesh( 'mesh.msh' );
+
+InitialData = CInitialData( 'initialData.txt', Mesh.nnode, Mesh.ndofpn );
+
+LEProblem = CLinearElasticityProblem( Mesh, InitialData );
+
+StaticSolution = CStaticSolution( Mesh, InitialData, LEProblem.K );
+
+for i=50:1000
+    
+    InitialData.t = linspace(0, 30, i)
+    
+    ModalSolution = CModalSolution( Mesh, InitialData, LEProblem, StaticSolution );
+
+    TemporalSolution = CTemporalSolution( Mesh, InitialData, LEProblem, StaticSolution );
+    
+end
+
+OneModeSolution = COneModeSolution( Mesh, InitialData, LEProblem, ModalSolution );

@@ -1,7 +1,10 @@
 function F = force( t, fN, w )
 
-F = fN'*cos(w*t);
-% F = zeros(size(fN,2),1);
+    if w == 0
+        F = zeros(size(fN,2),1);
+    else
+        F = fN'*cos(w*t);
+    end
 
 end
 

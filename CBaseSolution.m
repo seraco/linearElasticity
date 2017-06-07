@@ -26,6 +26,15 @@ classdef CBaseSolution
             ylabel('Energy[W]')
             legend('Potential','Kinetic','Total')
         end
+        function plotError( object, ModalSolution )
+            figure
+            o = object;
+            error = abs(o.totalEnergy-ModalSolution.totalEnergy)./ModalSolution.totalEnergy;
+            plot(o.t,error);
+            title('Error')
+            xlabel('t[s]')
+            ylabel('Error')
+        end
     end
     
 end
