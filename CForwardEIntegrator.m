@@ -5,9 +5,9 @@ classdef CForwardEIntegrator
     %   Version: 0.0.1
     
     methods (Static)
-        function Yn1 = step( tn, ~, Yn, h, ~, f, w, LEProblem, N )
+        function Yn1 = step( tn, ~, Yn, h, ~, f, w, Problem, N )
             
-            fn = LEProblem.f(tn, Yn, f, w, N ) ;
+            fn = Problem.f(tn, Yn, f, w, N ) ;
 
             Yn1 = Yn + h * fn ;
 

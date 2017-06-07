@@ -5,11 +5,11 @@ classdef CBackwardEIntegrator
     %   Version: 0.0.1
     
     methods (Static)
-        function Yn1 = step( tn, ~, Yn, h, ~, f, w, LEProblem, N )
+        function Yn1 = step( tn, ~, Yn, h, ~, f, w, Problem, N )
             
             options = optimoptions('fsolve','Display','none');
 
-            Yn1 = fsolve(@(Yn1) Yn1 - Yn - h * LEProblem.f( tn+h, Yn1, f, w, N ), Yn, options);
+            Yn1 = fsolve(@(Yn1) Yn1 - Yn - h * Problem.f( tn+h, Yn1, f, w, N ), Yn, options);
 
         end
     end
