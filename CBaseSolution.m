@@ -3,7 +3,7 @@ classdef CBaseSolution
     %   Brief: Base class for time solutions
     %   Author: S.Ramon
     %   Version: 0.0.1
-    
+
     properties
         potentialEnergy
         kineticEnergy
@@ -12,7 +12,7 @@ classdef CBaseSolution
     properties (Dependent)
         totalEnergy
     end
-    
+
     methods
         function result = get.totalEnergy( object )
             result = object.potentialEnergy + object.kineticEnergy;
@@ -21,9 +21,9 @@ classdef CBaseSolution
             figure
             o = object;
             plot(o.t,o.potentialEnergy,o.t,o.kineticEnergy,o.t,o.totalEnergy);
-            title('Total Energy')
+            title('Energy')
             xlabel('t[s]')
-            ylabel('Energy[W]')
+            ylabel('Energy[J]')
             legend('Potential','Kinetic','Total')
         end
         function plotError( object, ModalSolution )
@@ -36,6 +36,5 @@ classdef CBaseSolution
             ylabel('Error')
         end
     end
-    
-end
 
+end

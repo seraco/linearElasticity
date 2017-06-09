@@ -8,9 +8,9 @@ LEProblem = CLinearElasticityProblem( Mesh, InitialData );
 
 StaticSolution = CStaticSolution( Mesh, InitialData, LEProblem.K );
 
-iInitial = 20;
-iIncrement = 20;
-iFinal = 200;
+iInitial = 100;
+iIncrement = 100;
+iFinal = 2000;
 
 error = zeros(1, (iFinal-iInitial)/iIncrement+1);
 timeStep = zeros(1, (iFinal-iInitial)/iIncrement+1);
@@ -26,6 +26,7 @@ for i=iInitial:iIncrement:iFinal
     TemporalSolution = CTemporalSolution( Mesh, InitialData, LEProblem, StaticSolution );
     
     error(j) = max(abs(TemporalSolution.totalEnergy-ModalSolution.totalEnergy)./ModalSolution.totalEnergy);
+%     error(j) = abs(TemporalSolution.totalEnergy(1)-ModalSolution.totalEnergy(1))/ModalSolution.totalEnergy(1);
     timeStep(j) = InitialData.t(2) - InitialData.t(1);
     
 end
